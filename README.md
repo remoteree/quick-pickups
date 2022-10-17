@@ -19,7 +19,7 @@ cd quick-pickups
 ```
 - Create a virtual environment
 ```
-source venv_name/bin/activate
+python -m venv venv_name
 ```
 Note: `venv_name` can be anything, a common convention is `venv`
 - Enable the virtual environment
