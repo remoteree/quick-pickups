@@ -2,4 +2,8 @@ from django.urls import path
 
 from . import views
 
-app_name = "pickups"
+app_name = "sports"
+
+urlpatterns = [
+    path("", views.index, name="index")
+]
