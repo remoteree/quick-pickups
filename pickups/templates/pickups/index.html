@@ -7,5 +7,9 @@
     </head>
     <body>
         <h1>Quick Pickups</h1>
+        <a  href="{% url 'sports:register' %}" rel="stylesheet"> register</a>
+        {% if user.is_authenticated %}
+            <p> You're log in</p>
+        {% endif %}
     </body>
 </html>

@@ -126,5 +126,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://lathyriso-code50-50709998-p496997j37gq9-8000.githubpreview.dev"
+    "http://127.0.0.1:8000/"
 ]
