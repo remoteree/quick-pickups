@@ -1,9 +1,12 @@
-from django.shortcuts import render
+from multiprocessing import AuthenticationError
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db import connections, transaction
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
 
 from .models import User
 # Create your views here.
@@ -33,3 +36,23 @@ def register(request):
         return HttpResponseRedirect(reverse("sports:index"))
     else:
         return render(request, "../templates/pickups/register.html")
+
+def login(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = request.POST["username"]
+            email = request.POST["email"]
+            password = request.POST["password"]
+            confirmation = request.POST["confirmation"]
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}.")
+                return redirect("pickups:index")
+            else:
+                messages.error(request,"Invalid username or password.")
+        else:
+            messages.error(request,"Invalid username or password.")
+    form = AuthenticationForm()
+    return render(request=request, template_name="../templates/pickups/login.html", context={"login_form":form})
