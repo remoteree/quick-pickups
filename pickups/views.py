@@ -14,6 +14,9 @@ from .models import User
 def index(request):
     return render(request, "../templates/pickups/index.html")
 
+def home(request):
+    return render(request, "../templates/pickups/home.html")
+
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
@@ -32,8 +35,8 @@ def register(request):
             return render(request, "../templates/pickups/register.html", {
                 "message": "Username already taken."
             })
-        login(request, user)
-        return HttpResponseRedirect(reverse("sports:index"))
+        # login(request, user)
+        return HttpResponseRedirect(reverse("sports:login"))
     else:
         return render(request, "../templates/pickups/register.html")
 
@@ -42,17 +45,13 @@ def login(request):
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             username = request.POST["username"]
-            email = request.POST["email"]
             password = request.POST["password"]
-            confirmation = request.POST["confirmation"]
             user = authenticate(username=username, password=password)
             if user is not None:
-                login(request, user)
                 messages.info(request, f"You are now logged in as {username}.")
-                return redirect("pickups:index")
+                return redirect("sports:home")
             else:
                 messages.error(request,"Invalid username or password.")
         else:
             messages.error(request,"Invalid username or password.")
-    form = AuthenticationForm()
     return render(request=request, template_name="../templates/pickups/login.html", context={"login_form":form})
