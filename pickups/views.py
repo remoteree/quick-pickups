@@ -14,8 +14,25 @@ from .models import User
 def index(request):
     return render(request, "../templates/pickups/index.html")
 
-def home(request):
-    return render(request, "../templates/pickups/home.html")
+#def home(request):
+#    return render(request, "../templates/pickups/home.html")
+
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect(reverse("sports:index"))
+        else:
+            messages.error(request,"Invalid username or password.")
+    else:
+        return render(request=request, template_name="../templates/pickups/login.html")
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("sports:index"))
 
 def register(request):
     if request.method == "POST":
@@ -36,22 +53,6 @@ def register(request):
                 "message": "Username already taken."
             })
         # login(request, user)
-        return HttpResponseRedirect(reverse("sports:login"))
+        return HttpResponseRedirect(reverse("sports:login_view"))
     else:
         return render(request, "../templates/pickups/register.html")
-
-def login(request):
-    if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = request.POST["username"]
-            password = request.POST["password"]
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                messages.info(request, f"You are now logged in as {username}.")
-                return redirect("sports:home")
-            else:
-                messages.error(request,"Invalid username or password.")
-        else:
-            messages.error(request,"Invalid username or password.")
-    return render(request=request, template_name="../templates/pickups/login.html", context={"login_form":form})
